@@ -1638,6 +1638,18 @@ int input_read_parameters(struct file_content * pfc,
                           ErrorMsg errmsg){
 
   /** Summary: */
+  class_read_list_of_doubles("scf_parameters", pba->scf_parameters, _NUM_SCF_PARAMS_, errmsg);
+
+  pba->alpha_scf         = pba->scf_parameters[0];
+  pba->lambda_scf        = pba->scf_parameters[1];
+  pba->beta_scf          = pba->scf_parameters[2];
+  pba->gamma_scf         = pba->scf_parameters[3];
+  pba->k_scf             = pba->scf_parameters[4];
+  pba->omega_scf         = pba->scf_parameters[5];
+  pba->delta_scf         = pba->scf_parameters[6];
+  pba->psi0_scf          = pba->scf_parameters[7];
+  pba->phi_ini_scf       = pba->scf_parameters[8];
+  pba->phi_prime_ini_scf = pba->scf_parameters[9];
 
   /** Define local variables */
   int input_verbose=0;
@@ -5654,6 +5666,8 @@ int input_default_params(struct background *pba,
                          struct output *pop) {
 
   /** Summary: */
+  pba->scf_has_potential = _TRUE_;
+  pba->scf_potential = user_defined;
 
   /** - Define local variables */
   struct injection* pin = &(pth->in);

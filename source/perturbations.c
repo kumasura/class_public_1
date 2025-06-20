@@ -699,7 +699,9 @@ int perturbations_init(
   /** Summary: */
 
   /** - define local variables */
-
+  ppt->pv_size += 2;
+  ppt->index_pt_psi = index_pt++;
+  ppt->index_pt_dpsi = index_pt++;                   
   /* running index for modes */
   int index_md;
   /* running index for initial conditions */
@@ -8728,9 +8730,18 @@ int perturbations_derivs(double tau,
   /** Summary: */
 
   /** - define local variables */
+  double psi = y[ppt->index_pt_psi];
+  double dpsi = y[ppt->index_pt_dpsi];
+  double a = pba->a;
+  double aH = a * pba->H;
+  double d2V_dpsi2 = d2V_scf_dphi2(psi, pba);
 
-  /* multipole */
-  int l;
+  dy[ppt->index_pt_psi] = dpsi;
+  dy[ppt->index_pt_dpsi] = -2 * aH * dpsi
+    - (k * k + a * a * d2V_dpsi2) * psi
+    + 4 * phi_dot * dPhi_dt - 2 * dV_scf_dphi(psi, pba) * Phi;
+    /* multipole */
+    int l;
 
   /* scale factor and other background quantities */
   double a,a2,a_prime_over_a,R;

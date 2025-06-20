@@ -2982,20 +2982,24 @@ double ddV_p_scf(
 /** Fianlly we can obtain the overall potential \f$ V = V_p*V_e \f$
  */
 
-double V_scf(
-             struct background *pba,
-             double phi) {
-  return  V_e_scf(pba,phi)*V_p_scf(pba,phi);
+double V_scf(double phi, void * params) {
+  struct background * pba = (struct background *)params;
+  return pba->alpha_scf * exp(-pba->lambda_scf * phi)
+       + pba->beta_scf * phi * phi
+       + pba->gamma_scf * cos(pba->k_scf * 0.0 + pba->omega_scf * pba->btau)
+       + pba->delta_scf * pow(log(phi / pba->psi0_scf), 2);
 }
 
-double dV_scf(
-              struct background *pba,
-              double phi) {
-  return dV_e_scf(pba,phi)*V_p_scf(pba,phi) + V_e_scf(pba,phi)*dV_p_scf(pba,phi);
+double dV_scf_dphi(double phi, void * params) {
+  struct background * pba = (struct background *)params;
+  return -pba->alpha_scf * pba->lambda_scf * exp(-pba->lambda_scf * phi)
+         + 2.0 * pba->beta_scf * phi
+         + 2.0 * pba->delta_scf * log(phi / pba->psi0_scf) / phi;
 }
 
-double ddV_scf(
-               struct background *pba,
-               double phi) {
-  return ddV_e_scf(pba,phi)*V_p_scf(pba,phi) + 2*dV_e_scf(pba,phi)*dV_p_scf(pba,phi) + V_e_scf(pba,phi)*ddV_p_scf(pba,phi);
+double d2V_scf_dphi2(double phi, void * params) {
+  struct background * pba = (struct background *)params;
+  return pba->alpha_scf * pba->lambda_scf * pba->lambda_scf * exp(-pba->lambda_scf * phi)
+         + 2.0 * pba->beta_scf
+         + 2.0 * pba->delta_scf * (1.0 - log(phi / pba->psi0_scf)) / (phi * phi);
 }

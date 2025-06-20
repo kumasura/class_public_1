@@ -102,6 +102,8 @@ struct perturbations
    *  'thermodynamics' structures) */
 
   //@{
+  int index_pt_psi;
+  int index_pt_dpsi;
 
   short has_perturbations; /**< do we need to compute perturbations at all ? */
 
