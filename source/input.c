@@ -1638,7 +1638,7 @@ int input_read_parameters(struct file_content * pfc,
                           ErrorMsg errmsg){
 
   /** Summary: */
-  class_read_list_of_doubles("scf_parameters", pba->scf_parameters, _NUM_SCF_PARAMS_, errmsg);
+  parser_read_list_of_doubles("scf_parameters", pba->scf_parameters, _NUM_SCF_PARAMS_, errmsg);
 
   pba->alpha_scf         = pba->scf_parameters[0];
   pba->lambda_scf        = pba->scf_parameters[1];
@@ -5666,8 +5666,8 @@ int input_default_params(struct background *pba,
                          struct output *pop) {
 
   /** Summary: */
-  pba->scf_has_potential = _TRUE_;
-  pba->scf_potential = user_defined;
+  //pba->scf_has_potential = _TRUE_;
+  //pba->scf_potential = user_defined;
 
   /** - Define local variables */
   struct injection* pin = &(pth->in);

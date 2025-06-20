@@ -56,7 +56,6 @@ struct background
   //@{
   double alpha_scf, lambda_scf, beta_scf, gamma_scf;
   double k_scf, omega_scf, delta_scf, psi0_scf;
-  double phi_ini_scf, phi_prime_ini_scf;
 
   double H0; /**< \f$ H_0 \f$: Hubble parameter (in fact, [\f$H_0/c\f$]) in \f$ Mpc^{-1} \f$ */
   double h;  /**< reduced Hubble parameter */
