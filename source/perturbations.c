@@ -27,6 +27,15 @@
 #include "perturbations.h"
 #include "parallel.h"
 
+/* Background potential derivatives */
+#ifdef __cplusplus
+extern "C" {
+#endif
+double d2V_scf_dphi2(struct background *pba, double phi);
+#ifdef __cplusplus
+}
+#endif
+
 
 /**
  * Source function \f$ S^{X} (k, \tau) \f$ at a given conformal time tau.
@@ -3853,12 +3862,8 @@ int perturbations_vector_init(
 
   if (_scalars_) {
     if (pba->has_scf == _TRUE_) {
-      ppt->index_pt_psi = index_pt++;
-      ppt->index_pt_dpsi = index_pt++;
-    }
-
-    if (pba->has_scf == _TRUE_) {
-      ppt->pt_size += 2;
+      class_define_index(ppv->index_pt_psi,_TRUE_,index_pt,1);
+      class_define_index(ppv->index_pt_dpsi,_TRUE_,index_pt,1);
     }
 
     /* reject inconsistent values of the number of mutipoles in photon temperature hierarchy */
@@ -4429,6 +4434,12 @@ int perturbations_vector_init(
 
         ppv->y[ppv->index_pt_phi_prime_scf] =
           ppw->pv->y[ppw->pv->index_pt_phi_prime_scf];
+
+        ppv->y[ppv->index_pt_psi] =
+          ppw->pv->y[ppw->pv->index_pt_psi];
+
+        ppv->y[ppv->index_pt_dpsi] =
+          ppw->pv->y[ppw->pv->index_pt_dpsi];
       }
 
       if (ppt->gauge == synchronous)
@@ -5493,6 +5504,8 @@ int perturbations_initial_conditions(struct precision * ppr,
         /*  a*a/k/k/ppw->pvecback[pba->index_bg_phi_prime_scf]*k*ktau_three/4.*1./(4.-6.*(1./3.)+3.*1.) * (ppw->pvecback[pba->index_bg_rho_scf] + ppw->pvecback[pba->index_bg_p_scf])* ppr->curvature_ini * s2_squared; */
 
         ppw->pv->y[ppw->pv->index_pt_phi_prime_scf] = 0.;
+        ppw->pv->y[ppw->pv->index_pt_psi] = 0.;
+        ppw->pv->y[ppw->pv->index_pt_dpsi] = 0.;
         /* delta_fld expression * rho_scf with the w = 1/3, c_s = 1
            a*a/ppw->pvecback[pba->index_bg_phi_prime_scf]*( - ktau_two/4.*(1.+1./3.)*(4.-3.*1.)/(4.-6.*(1/3.)+3.*1.)*ppw->pvecback[pba->index_bg_rho_scf] - ppw->pvecback[pba->index_bg_dV_scf]*ppw->pv->y[ppw->pv->index_pt_phi_scf])* ppr->curvature_ini * s2_squared; */
       }
@@ -8736,18 +8749,8 @@ int perturbations_derivs(double tau,
   /** Summary: */
 
   /** - define local variables */
-  double psi = y[ppt->index_pt_psi];
-  double dpsi = y[ppt->index_pt_dpsi];
-  double a = pba->a;
-  double aH = a * pba->H;
-  double d2V_dpsi2 = d2V_scf_dphi2(psi, pba);
-
-  dy[ppt->index_pt_psi] = dpsi;
-  dy[ppt->index_pt_dpsi] = -2 * aH * dpsi
-    - (k * k + a * a * d2V_dpsi2) * psi
-    + 4 * phi_dot * dPhi_dt - 2 * dV_scf_dphi(psi, pba) * Phi;
-    /* multipole */
-    int l;
+  /* multipole */
+  int l;
 
   /* scale factor and other background quantities */
   double a,a2,a_prime_over_a,R;
@@ -9410,6 +9413,13 @@ int perturbations_derivs(double tau,
     /** - ---> scalar field (scf) */
 
     if (pba->has_scf == _TRUE_) {
+
+      /** - ----> additional field psi */
+
+      dy[pv->index_pt_psi] = y[pv->index_pt_dpsi];
+
+      dy[pv->index_pt_dpsi] =  - 2.*a_prime_over_a*y[pv->index_pt_dpsi]
+        - (k2 + a2*d2V_scf_dphi2(pba, y[pv->index_pt_psi]))*y[pv->index_pt_psi];
 
       /** - ----> field value */
 

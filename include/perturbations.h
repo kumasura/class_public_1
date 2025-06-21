@@ -102,8 +102,6 @@ struct perturbations
    *  'thermodynamics' structures) */
 
   //@{
-  int index_pt_psi;
-  int index_pt_dpsi;
 
   short has_perturbations; /**< do we need to compute perturbations at all ? */
 
@@ -484,6 +482,8 @@ struct perturbations_vector
   int index_pt_Gamma_fld;  /**< unique dark energy dynamical variable in PPF case */
   int index_pt_phi_scf;  /**< scalar field density */
   int index_pt_phi_prime_scf;  /**< scalar field velocity */
+  int index_pt_psi;  /**< additional scalar field perturbation */
+  int index_pt_dpsi; /**< derivative of additional scalar field perturbation */
   int index_pt_delta_ur; /**< density of ultra-relativistic neutrinos/relics */
   int index_pt_theta_ur; /**< velocity of ultra-relativistic neutrinos/relics */
   int index_pt_shear_ur; /**< shear of ultra-relativistic neutrinos/relics */
