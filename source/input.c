@@ -1638,18 +1638,28 @@ int input_read_parameters(struct file_content * pfc,
                           ErrorMsg errmsg){
 
   /** Summary: */
-  parser_read_list_of_doubles("scf_parameters", pba->scf_parameters, _NUM_SCF_PARAMS_, errmsg);
+  double *scf_parameters;
+  int scf_parameters_size;
+  
+  class_call(parser_read_list_of_doubles(pfc, "scf_parameters", &scf_parameters, &scf_parameters_size, errmsg),
+             errmsg, errmsg);
 
-  pba->alpha_scf         = pba->scf_parameters[0];
-  pba->lambda_scf        = pba->scf_parameters[1];
-  pba->beta_scf          = pba->scf_parameters[2];
-  pba->gamma_scf         = pba->scf_parameters[3];
-  pba->k_scf             = pba->scf_parameters[4];
-  pba->omega_scf         = pba->scf_parameters[5];
-  pba->delta_scf         = pba->scf_parameters[6];
-  pba->psi0_scf          = pba->scf_parameters[7];
-  pba->phi_ini_scf       = pba->scf_parameters[8];
-  pba->phi_prime_ini_scf = pba->scf_parameters[9];
+  if (scf_parameters_size != 10) {
+    class_stop(errmsg, "Expected 10 parameters for scf_parameters, got %d", scf_parameters_size);
+  }
+
+  pba->alpha_scf         = scf_parameters[0];
+  pba->lambda_scf        = scf_parameters[1];
+  pba->beta_scf          = scf_parameters[2];
+  pba->gamma_scf         = scf_parameters[3];
+  pba->k_scf             = scf_parameters[4];
+  pba->omega_scf         = scf_parameters[5];
+  pba->delta_scf         = scf_parameters[6];
+  pba->psi0_scf          = scf_parameters[7];
+  pba->phi_ini_scf       = scf_parameters[8];
+  pba->phi_prime_ini_scf = scf_parameters[9];
+
+  free(scf_parameters);
 
   /** Define local variables */
   int input_verbose=0;
