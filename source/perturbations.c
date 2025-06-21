@@ -699,9 +699,7 @@ int perturbations_init(
   /** Summary: */
 
   /** - define local variables */
-  ppt->pv_size += 2;
-  ppt->index_pt_psi = index_pt++;
-  ppt->index_pt_dpsi = index_pt++;                   
+                
   /* running index for modes */
   int index_md;
   /* running index for initial conditions */
@@ -3854,6 +3852,14 @@ int perturbations_vector_init(
   index_pt = 0;
 
   if (_scalars_) {
+    if (pba->has_scf == _TRUE_) {
+      ppt->index_pt_psi = index_pt++;
+      ppt->index_pt_dpsi = index_pt++;
+    }
+
+    if (pba->has_scf == _TRUE_) {
+      ppt->pt_size += 2;
+    }
 
     /* reject inconsistent values of the number of mutipoles in photon temperature hierarchy */
     class_test(ppr->l_max_g < 4,
