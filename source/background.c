@@ -3000,3 +3000,11 @@ double d2V_scf_dphi2(struct background *pba, double phi) {
          + 2.0 * pba->beta_scf
          + 2.0 * pba->delta_scf * (1.0 - log(phi / pba->psi0_scf)) / (phi * phi);
 }
+
+double dV_scf(struct background *pba, double phi) {
+  return dV_scf_dphi(pba, phi);
+}
+
+double ddV_scf(struct background *pba, double phi) {
+  return d2V_scf_dphi2(pba, phi);
+}
