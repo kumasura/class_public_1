@@ -1641,8 +1641,6 @@ int input_read_parameters(struct file_content * pfc,
   double *scf_parameters;
   int scf_parameters_size;
   
-  class_call(parser_read_list_of_doubles(pfc, "scf_parameters", &scf_parameters, &scf_parameters_size, errmsg),
-             errmsg, errmsg);
 
   if (scf_parameters_size != 10) {
     class_stop(errmsg, "Expected 10 parameters for scf_parameters, got %d", scf_parameters_size);
