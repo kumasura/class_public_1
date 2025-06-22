@@ -3325,13 +3325,22 @@ int input_read_parameters_species(struct file_content * pfc,
 
     /** 8.b.1) Additional SCF parameters */
     /* Read */
+    flag1 = _FALSE_;
+
     class_call(parser_read_list_of_doubles(pfc,
-                                           "scf_parameters",
-                                           &(pba->scf_parameters_size),
-                                           &(pba->scf_parameters),
-                                           &flag1,
-                                           errmsg),
-               errmsg,errmsg);
+                                          "scf_parameters",
+                                          &(pba->scf_parameters_size),
+                                          &(pba->scf_parameters),
+                                          &flag1,
+                                          errmsg),
+              errmsg, errmsg);
+
+    if (flag1 == _TRUE_) {
+      if (pba->scf_parameters_size != 10) {
+        class_stop(errmsg, "Expected 10 parameters for scf_parameters, got %d", pba->scf_parameters_size);
+      }
+    }
+
 
     /** 8.b.2) SCF initial conditions from attractor solution */
     /* Read */
@@ -5676,6 +5685,19 @@ int input_default_params(struct background *pba,
   /** Summary: */
   //pba->scf_has_potential = _TRUE_;
   //pba->scf_potential = user_defined;
+  pba->scf_parameters_size = 10;
+  class_alloc(pba->scf_parameters, sizeof(double) * 10, errmsg);
+  pba->scf_parameters[0] = 1.0;   // alpha
+  pba->scf_parameters[1] = 0.5;   // lambda
+  pba->scf_parameters[2] = 0.1;   // beta
+  pba->scf_parameters[3] = 0.05;  // gamma
+  pba->scf_parameters[4] = 10.0;  // k
+  pba->scf_parameters[5] = 0.3;   // omega
+  pba->scf_parameters[6] = 0.01;  // delta
+  pba->scf_parameters[7] = 1.0;   // psi0
+  pba->scf_parameters[8] = 100.0; // phi_ini
+  pba->scf_parameters[9] = 0.0;   // phi'_ini
+
 
   /** - Define local variables */
   struct injection* pin = &(pth->in);
