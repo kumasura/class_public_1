@@ -5686,7 +5686,7 @@ int input_default_params(struct background *pba,
   //pba->scf_has_potential = _TRUE_;
   //pba->scf_potential = user_defined;
   pba->scf_parameters_size = 10;
-  class_alloc(pba->scf_parameters, sizeof(double) * 10, errmsg);
+  class_alloc(pba->scf_parameters, sizeof(double) * 10);
   pba->scf_parameters[0] = 1.0;   // alpha
   pba->scf_parameters[1] = 0.5;   // lambda
   pba->scf_parameters[2] = 0.1;   // beta
