@@ -6784,7 +6784,7 @@ int perturbations_total_stress_energy(
 
   /** - define local variables */
 
-  double a,a2,a_prime_over_a,k2;
+  double a2,k2;
   double rho_m=0.;
   double delta_rho_m=0.;
   double rho_plus_p_m=0.;
